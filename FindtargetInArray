@@ -1,0 +1,24 @@
+import java.util.Scanner;
+
+public class Findtarget {
+    public static int findtarget(int nums[], int target) {
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == target) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int nums[] = {1, 2, 3, 4, 5};
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the target number: ");
+        int target = sc.nextInt();
+
+        int result = findtarget(nums, target);
+        System.out.println(result);
+
+    }
+}
