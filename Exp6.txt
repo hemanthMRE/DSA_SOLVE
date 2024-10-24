@@ -1,0 +1,190 @@
+activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cake Bakery"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/cakeBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/itemLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:text="Cake Flavour"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/cakeBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+    <Spinner
+        android:id="@+id/cakeBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        app:layout_constraintBottom_toTopOf="@+id/cakeImage"
+        app:layout_constraintStart_toEndOf="@+id/itemLbl"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <TextView
+        android:id="@+id/dateLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date of Delivery"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cakeImage"
+        app:layout_constraintTop_toBottomOf="@+id/itemLbl"
+        app:layout_constraintBottom_toTopOf="@+id/timeLbl" />
+    <ImageView
+        android:id="@+id/cakeImage"
+        android:layout_width="157dp"
+        android:layout_height="152dp"
+        app:srcCompat="@drawable/calender" 
+        android:onClick="bringDate"
+        app:layout_constraintBottom_toTopOf="@+id/timeImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dateLbl"
+        app:layout_constraintTop_toBottomOf="@+id/cakeBox" />
+    <TextView
+        android:id="@+id/timeLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time of Delivery"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/orderBtn"
+        app:layout_constraintEnd_toStartOf="@id/timeImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateLbl"
+        android:contentDescription="@null"/>
+    <ImageView
+        android:id="@+id/timeImage"
+        android:layout_width="192dp"
+        android:layout_height="102dp"
+        android:onClick="bringTime"
+        app:layout_constraintBottom_toTopOf="@+id/orderBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/timeLbl"
+        app:layout_constraintTop_toBottomOf="@+id/cakeImage"
+        app:srcCompat="@drawable/time" />
+    <Button
+        android:id="@+id/orderBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place Order"
+        android:onClick="placeOrder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timeImage"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+MainActivity.java
+
+//ur package 
+
+
+
+public class MainActivity extends AppCompatActivity {
+Spinner sp;
+String[] items={"Vanila","Strawery","Choco","mixed"};
+String dateselected,timeSelected;
+String itemSelected;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+        sp=findViewById(R.id.cakeBox);
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(adapter);
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                itemSelected=adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                itemSelected="Nothing Selected";
+            }
+        });
+    }
+
+    public void bringDate(View v) {
+        Calendar c=Calendar.getInstance();
+        int pYear=c.get(Calendar.YEAR);
+        int pMonth=c.get(Calendar.MONTH);
+        int pDay=c.get(Calendar.DATE);
+
+        DatePickerDialog dialog = new DatePickerDialog(this,
+                android.R.style.Theme_DeviceDefault_DialogWhenLarge, new
+                DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        dateselected = dayOfMonth+"/"+(month+1)+"/"+year;
+                    }
+                },pYear,pMonth,pDay);
+        dialog.show();
+    }
+    public void bringTime(View v) {
+        Calendar c=Calendar.getInstance();
+        int pH=c.get(Calendar.HOUR_OF_DAY);
+        int pM=c.get(Calendar.MINUTE);
+        int pS=c.get(Calendar.SECOND);
+        TimePickerDialog dialog = new TimePickerDialog(this,
+                android.R.style.Theme_DeviceDefault_DialogWhenLarge, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                timeSelected=i+":"+i1;
+            }
+        },pH,pM,false);
+        dialog.show();
+
+    }
+    public void placeOrder(View v) {
+            Intent intent=new Intent(getApplicationContext(),SelectedItem.class);
+        intent.putExtra("ITEM",itemSelected);
+        intent.putExtra("DATE",dateselected);
+        intent.putExtra("TIME",timeSelected);
+        startActivity(intent);
+    }
+}
+
+
+
+//SelecedItem activity
+
+//add your package
+
+public class SelectedItem extends AppCompatActivity {
+    TextView tv;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+       tv=findViewById(R.id.result);
+       Intent intent=getIntent();
+       String item=intent.getStringExtra("ITEM");
+        String dates=intent.getStringExtra("DATE");
+        String times=intent.getStringExtra("TIME");
+     tv.setText(item+"\n"+dates+"\n"+times);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_selected_item);
+
+    }
+}
